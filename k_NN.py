@@ -1,5 +1,6 @@
 from math import sqrt
-from collections import Counter
+from collections import Counter, defaultdict
+import csv
 
 
 def distance(vector0, vector1):
@@ -16,15 +17,11 @@ def most_frequent(neighbors, summation=True):
         for dist, category in neighbors:
             frequency[category].append(dist)
 
-        print(frequency)
-
-        print([(key, sum(frequency[key])) for key in frequency])
         sums = [(sum(frequency[category]), category) for category in frequency]
         return max(sums)[1]
 
     else:
         counter = Counter([category for dist, category in neighbors])
-        print(counter)
         return counter.most_common(1)[0][0]
 
 # { 'class1': [[data_point1], [data_point2]], 'class2': [[data_point1], ... }
@@ -38,21 +35,33 @@ def nearest_neighbors(sample, query, k=5, weighted=True):
     for category in sample:
         for data_point in sample[category]:
             dist = distance(query, data_point)
-            print((category, dist))
             if weighted:
+                if dist == 0:  # query feature exists in training sample
+                    return category
                 dist = 1.0 / dist
             neighbors.append((dist, category))
 
     k_nearest_neighbors = sorted(neighbors)[:k]
-    print(k_nearest_neighbors)
     return most_frequent(k_nearest_neighbors, weighted)
 
 
 if __name__ == '__main__':
-    data_set = {2: [[3, 5, 9, 4], [5, 4, 3, 9]], 4: [[2, 5, 9, 5]]}
-    unknown = [3, 5, 9, 6]
-
-    # if len(data_set.items) != len(unknown):
-    #     raise ValueError('Feature vectors should be the same length')
-
-    print(nearest_neighbors(data_set, unknown, 3, True))
+    with open('test.csv') as data:
+        reader = csv.reader(data)
+        train = defaultdict(list)
+        test = defaultdict(list)
+        i = 1
+        for row in reader:
+            if i % 3 == 0:  # 33% of sample goes to training
+                train[row[-1]].append([int(val) for val in row[:-1]])
+            else:
+                test[row[-1]].append([int(val) for val in row[:-1]])
+            i = i + 1
+        train = dict(train)
+        print(len(train['1']), len(train['2']))
+        results = []
+        for category in test:
+            for feature in test[category]:
+                result = nearest_neighbors(train, feature, 5, False)
+                results.append((category, feature, result, result == category))
+        print(results)
