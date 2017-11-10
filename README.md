@@ -30,12 +30,12 @@
 #### Example
 ```
 {
-    "input": "./petals.csv",
+    "input": "./skin.csv",
     "exclude": [],
-    "class": 4,
+    "class": 3,
     "neighbors": 5,
-    "skewed": false,
-    "sample": 150,
-    "test": 0.3
+    "skewed": true,
+    "sample": 10000,
+    "test": 0.2
 }
 ```
