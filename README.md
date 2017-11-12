@@ -10,10 +10,12 @@
 > __Cross-Validation__ `None`
 
 ## Assumptions
+* File format `csv`
 * Input data `shuffled`
 * Number of attributes `< 10`
 * Attribute datatype `real`
 * Missing values `false`
+* Headers `false`
 
 ## Configuration
 ```
