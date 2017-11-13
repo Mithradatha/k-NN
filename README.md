@@ -9,10 +9,13 @@
 
 > __Cross-Validation__ `None`
 
+> __Feature Normalization__ `None`
+
 ## Assumptions
 * File format `csv`
 * Input data `shuffled`
-* Number of attributes `< 10`
+* Number of features `< 10`
+* Feature units `scaled`
 * Attribute datatype `real`
 * Missing values `false`
 * Headers `false`
