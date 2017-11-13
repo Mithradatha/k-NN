@@ -5,11 +5,12 @@
 
 > __Classifier__ `Majority Vote | Weighted Distance`
 
+> __Feature Normalization__ `None`
+
 > __Dimension Reduction__ `None`
 
 > __Cross-Validation__ `None`
 
-> __Feature Normalization__ `None`
 
 ## Assumptions
 * File format `csv`
