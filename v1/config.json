@@ -1,8 +1,8 @@
 {
-    "input": "./petals.csv",
+    "input": "../petals.csv",
     "exclude": [],
     "class": 4,
-    "neighbors": 5,
+    "neighbors": 3,
     "skewed": false,
     "sample": 150,
     "test": 0.3

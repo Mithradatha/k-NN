@@ -1,0 +1,6 @@
+{
+    "input": "./petals.csv",
+    "neighbors": 105,
+    "train": 10,
+    "test": 1
+}

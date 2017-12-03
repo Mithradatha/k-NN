@@ -7,7 +7,7 @@ import json
 
 
 def memoize(distance_fnc):
-    '''caches previously calculated distances'''
+    """caches previously calculated distances"""
 
     distances = {}
 
@@ -34,7 +34,6 @@ def memoize(distance_fnc):
 def distance(vector0, vector1):
     '''returns the Euclidean distance between two vectors'''
 
-    # the code below is never executed
     square_difference = [(final - initial)**2 for initial,
                          final in zip(vector0, vector1)]
     return sqrt(sum(square_difference))
@@ -52,7 +51,7 @@ def majority_vote(k_nearest_neighbors):
 
 
 def weighted_vote(k_nearest_neighbors):
-    '''average of closest neighbors win'''
+    """average of closest neighbors win"""
 
     neighbor = defaultdict(list)
     for (dist, category) in k_nearest_neighbors:
@@ -64,6 +63,7 @@ def weighted_vote(k_nearest_neighbors):
 
     category = result[1]
     confidence = result[0] / sum([total for total, _ in sums])
+
     return (k_nearest_neighbors, category, confidence)
 
 
@@ -106,66 +106,66 @@ if __name__ == '__main__':
         sample_size = config['sample']
         distribution = config['test']
 
-        with open(config['input']) as data:
-            reader = csv.reader(data)
+    with open(config['input']) as data:
+        reader = csv.reader(data)
 
-            train_set = defaultdict(list)
-            test_set = defaultdict(list)
+        train_set = defaultdict(list)
+        test_set = defaultdict(list)
 
-            train_len = 0
-            test_len = 0
+        train_len = 0
+        test_len = 0
 
-            for i, row in enumerate(reader):
+        for i, row in enumerate(reader):
 
-                if i == sample_size:
-                    break
+            if i == sample_size:
+                break
 
-                # filter out unwanted features
-                features = [float(col) for index, col
-                            in enumerate(row) if index not in exclude]
+            # filter out unwanted features
+            features = [float(col) for index, col
+                        in enumerate(row) if index not in exclude]
 
-                # distribute data
-                r = random.random()
-                if r < distribution:
-                    test_set[row[group]].append(features)
-                    test_len += 1
-                else:
-                    train_set[row[group]].append(features)
-                    train_len += 1
+            # distribute data
+            r = random.random()
+            if r < distribution:
+                test_set[row[group]].append(features)
+                test_len += 1
+            else:
+                train_set[row[group]].append(features)
+                train_len += 1
 
-            print('{} data points in training set..\n'.format(train_len))
-            print('training distribution:')
+        print('{} data points in training set..\n'.format(train_len))
+        print('training distribution:')
 
-            for key in train_set:
-                print('{} data points in class {}..'
-                      .format(len(train_set[key]), key))
+        for key in train_set:
+            print('{} data points in class {}..'
+                  .format(len(train_set[key]), key))
 
-            results = []
-            for category in test_set:
-                for feature in test_set[category]:
+        results = []
+        for category in test_set:
+            for feature in test_set[category]:
 
-                    (neighbors, result, confidence) = classify(
-                        train_set, feature, k, skewed)
+                (neighbors, result, confidence) = classify(
+                    train_set, feature, k, skewed)
 
-                    results.append((category, feature, neighbors,
-                                    result, confidence, category == result))
+                results.append((category, feature, neighbors,
+                                result, confidence, category == result))
 
-            print('\n{} data points in testing set..'.format(test_len))
+        print('\n{} data points in testing set..'.format(test_len))
 
-            passed = sum([1 for (_, _, _, _, _, grade) in results if grade])
-            print('{} data points classified correctly..'.format(passed))
-            print('\naccurancy: {0:.2f}%'.format(100 * (passed / test_len)))
+        passed = sum([1 for (_, _, _, _, _, grade) in results if grade])
+        print('{} data points classified correctly..'.format(passed))
+        print('\naccurancy: {0:.2f}%'.format(100 * (passed / test_len)))
 
-            print('\nwriting results to output.csv..')
+        print('\nwriting results to output.csv..')
 
-            with open('output.csv', 'w') as output:
+    with open('output.csv', 'w') as output:
 
-                headers = ['Expected Class', 'Features',
-                           'K Nearest Neighbors',
-                           'Actual Class', 'Confidence', 'Pass']
+        headers = ['Expected Class', 'Features',
+                   'K Nearest Neighbors',
+                   'Actual Class', 'Confidence', 'Pass']
 
-                writer = csv.DictWriter(output, fieldnames=headers)
-                writer.writeheader()
-                for row in results:
-                    writer.writerow({headers[i]: row[i]
-                                     for i in range(0, len(headers))})
+        writer = csv.DictWriter(output, fieldnames=headers)
+        writer.writeheader()
+        for row in results:
+            writer.writerow({headers[i]: row[i]
+                             for i in range(0, len(headers))})
